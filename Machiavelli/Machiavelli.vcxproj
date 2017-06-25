@@ -145,12 +145,37 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BuildCard.h" />
+    <ClInclude Include="CardFactory.h" />
+    <ClInclude Include="CharacterCard.h" />
+    <ClInclude Include="CircularBuffer.h" />
+    <ClInclude Include="ClientCommand.h" />
+    <ClInclude Include="ClientInfo.h" />
+    <ClInclude Include="Deck.h" />
+    <ClInclude Include="Enums.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Socket.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Sync_queue.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="throw.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Machiavelli.cpp" />
+    <ClCompile Include="BuildCard.cpp" />
+    <ClCompile Include="CardFactory.cpp" />
+    <ClCompile Include="CharacterCard.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Socket.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="throw.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Bouwkaarten.csv" />
+    <None Include="karakterkaarten.csv" />
+    <None Include="Makefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
