@@ -8,8 +8,8 @@ template <class T>
 class Deck
 {
 public:
-	Deck();
-	~Deck();
+	Deck() {};
+	~Deck() {};
 
 	void Shuffle() { random_shuffle(deck.begin(), deck.end()); }
 	void AddCard(std::shared_ptr<T> card) { deck.push_back(card); }
@@ -17,7 +17,7 @@ public:
 	void RemoveCardAt(int index) { deck.erase(deck.begin() + index); }
 	int GetDeckSize() { return deck.size(); }
 	void ClearDeck() { deck.clear(); }
-	std::vector < std::shared_ptr<T> GetDeck() { return deck; }
+	std::vector<std::shared_ptr<T>> GetDeck() { return deck; }
 
 
 private:

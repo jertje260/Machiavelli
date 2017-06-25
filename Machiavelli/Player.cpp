@@ -7,6 +7,7 @@
 //
 
 #include "Player.h"
+
 using namespace std;
 
 Player::~Player()
@@ -14,10 +15,13 @@ Player::~Player()
 }
 
 
-Player::Player(std::string name, std::shared_ptr<Game> game, std::shared_ptr<Socket> client) {
-	{
-		Name = name;
-		Game = game;
-		Client = client;
-	}
+Player::Player(std::string name, Socket client) {
+	Name = name;
+	Client = move(client);
 }
+
+Player::Player(std::string name)
+{
+	this->Name = name;
+}
+

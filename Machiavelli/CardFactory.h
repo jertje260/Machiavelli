@@ -9,15 +9,14 @@ class CardFactory
 {
 public:
 
-	~CardFactory() {}
+	~CardFactory();
 	static CardFactory *Get() {
 		static CardFactory instance;
 		return &instance;
 	}
-	void RegisterBuildCard(const string &building, );
 
 
-	shared_ptr<BuildCard> CreateBuildCard(string card);
+	std::shared_ptr<BuildCard> CreateBuildCard(std::string card, std::string color, std::string points);
 	shared_ptr<CharacterCard> CreateCharacterCard(string card);
 
 	
@@ -28,8 +27,7 @@ private:
 	CardFactory(const CardFactory &) {}
 	CardFactory &operator=(const CardFactory &){ return *this; }
 
-	map<string, BuildCard> BuildCards;
-	map<string, CharacterCard> CharacterCards;
+	map<string, CharacterCard> characterCards;
 
 	
 

@@ -11,12 +11,13 @@
 
 #include <string>
 #include <memory>
-#include "Game.h"
 #include "Socket.h"
 
 class Player {
 public:
-	Player(std::string name, std::shared_ptr<Game> game, std::shared_ptr<Socket> client);
+	Player(std::string name, Socket client);
+	Player(std::string name);
+	Player() {};
 	~Player();
 
     std::string get_name() const { return Name; }
@@ -24,8 +25,7 @@ public:
 
 private:
     std::string Name;
-	std::shared_ptr<Game> Game;
-	std::shared_ptr<Socket> Client;
+	Socket Client;
 };
 
 #endif /* Player_hpp */

@@ -1,11 +1,14 @@
 #pragma once
-#include "Player.h"
+class Player;
 #include <memory>
 #include <vector>
 #include "Deck.h"
 #include "BuildCard.h"
 #include "CharacterCard.h"
+#include "CardFactory.h"
+#include "Player.h"
 
+using namespace std;
 class Game
 {
 public:
@@ -14,23 +17,27 @@ public:
 
 	bool IsAvailable();
 	bool IsStarted();
-	std::vector<std::shared_ptr<Player>> GetCurrentPlayers();
-	void AddPlayer(std::shared_ptr<Player> p);
-	std::shared_ptr<Player> GetCurrentPlayer();
-	void HandleCommand(std::shared_ptr<Player> player, std::string command);
+	vector<shared_ptr<Player>> GetCurrentPlayers();
+	void AddPlayer(shared_ptr<Player> p);
+	shared_ptr<Player> GetCurrentPlayer();
+	void HandleCommand(shared_ptr<Player> player, string command);
 
 
 private:
 	bool Running;
-	std::vector<std::shared_ptr<Player>> Players;
+	vector<shared_ptr<Player>> Players;
 	void LoadResources();
 	void NewRound();
 	void SetupRound();
 	void PlayRound();
+
+	void CreateBuildDeck();
+
+	vector<vector<string>> ReadCsv(string path);
 	
 
-	Deck<CharacterCard> Characters;
-	Deck<BuildCard> BuildCards;
+	Deck<CharacterCard> characters;
+	Deck<BuildCard> buildCards;
 
 
 };

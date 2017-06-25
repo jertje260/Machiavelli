@@ -15,15 +15,19 @@
 #include "Player.h"
 
 class ClientInfo {
-    Socket _socket;
-    Player _player;
+	Socket _socket;
+	std::shared_ptr<Player> _player;
 public:
-    ClientInfo(Socket socket, Player player)
-        : _socket{std::move(socket)}, _player{std::move(player)} {}
-    Socket& get_socket() { return _socket; }
-    const Socket& get_socket() const { return _socket; }
-    Player& get_player() { return _player; }
-    const Player& get_player() const { return _player; }
+	ClientInfo(Socket socket, std::shared_ptr<Player> player)
+		: _socket{ std::move(socket) } {
+		this->_player = player;
+	}
+
+	Socket& get_socket() { return _socket; }
+	const Socket& get_socket() const { return _socket; }
+	std::shared_ptr<Player> get_player() { return _player; }
+	std::shared_ptr<Player> get_player() const { return _player; }
+	void set_player(std::shared_ptr<Player> player) { _player = player; }
 };
 
 #endif
