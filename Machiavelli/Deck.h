@@ -17,6 +17,11 @@ public:
 	void RemoveCardAt(int index) { deck.erase(deck.begin() + index); }
 	int GetDeckSize() { return deck.size(); }
 	void ClearDeck() { deck.clear(); }
+	std::shared_ptr<T> Pop() {
+		auto card = deck[0];
+		RemoveCardAt(0);
+		return card;
+	}
 	std::vector<std::shared_ptr<T>> GetDeck() { return deck; }
 
 

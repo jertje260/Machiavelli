@@ -29,6 +29,38 @@ inline const std::string CharacterToString(CharacterType c) {
 	}
 }
 
+inline const CharacterType StringToCharacter(std::string c) {
+	std::transform(c.begin(), c.end(), c.begin(), ::tolower);
+
+	if (c == "moordenaar") {
+		return CharacterType::Moordenaar;
+	}
+	else if (c == "dief") {
+		return CharacterType::Dief;
+	}
+	else if (c == "magiër") {
+		return CharacterType::Magiër;
+	}
+	else if (c == "koning") {
+		return CharacterType::Koning;
+	}
+	else if (c == "prediker") {
+		return CharacterType::Prediker;
+	}
+	else if (c == "koopman") {
+		return CharacterType::Koopman;
+	}
+	else if (c == "bouwmeester") {
+		return CharacterType::Bouwmeester;
+	}
+	else if (c == "condottiere") {
+		return CharacterType::Condottiere;
+	}
+	else {
+		return CharacterType::NONE;
+	}
+}
+
 inline const std::string ColorToString(CardColor c) {
 	switch (c)
 	{

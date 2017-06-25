@@ -1,5 +1,5 @@
 // stdafx.cpp : source file that includes just the standard includes
-// Machiavelli.pch will be the pre-compiled header
+// Mach.pch will be the pre-compiled header
 // stdafx.obj will contain the pre-compiled type information
 
 #include "stdafx.h"

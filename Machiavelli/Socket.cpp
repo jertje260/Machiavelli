@@ -149,7 +149,6 @@ char Socket::read() const
 }
 
 
-
 void Socket::write(const std::string& msg) const
 {
     write(msg.c_str(), msg.length());

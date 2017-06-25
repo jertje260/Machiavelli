@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{42B723F3-0F76-487C-93AE-B317A081AA74}</ProjectGuid>
+    <ProjectGuid>{702F1541-4C6B-4FB3-BAA1-0AEBD3B92CE0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Machiavelli</RootNamespace>
+    <RootNamespace>Mach</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,6 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -88,6 +90,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,16 +148,24 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bouwmeester.h" />
     <ClInclude Include="BuildCard.h" />
     <ClInclude Include="CardFactory.h" />
     <ClInclude Include="CharacterCard.h" />
     <ClInclude Include="CircularBuffer.h" />
     <ClInclude Include="ClientCommand.h" />
     <ClInclude Include="ClientInfo.h" />
+    <ClInclude Include="Condottiere.h" />
     <ClInclude Include="Deck.h" />
+    <ClInclude Include="Dief.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Koning.h" />
+    <ClInclude Include="Koopman.h" />
+    <ClInclude Include="Magier.h" />
+    <ClInclude Include="Moordenaar.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Prediker.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Sync_queue.h" />
@@ -162,12 +173,21 @@
     <ClInclude Include="throw.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bouwmeester.cpp" />
     <ClCompile Include="BuildCard.cpp" />
     <ClCompile Include="CardFactory.cpp" />
     <ClCompile Include="CharacterCard.cpp" />
+    <ClCompile Include="Condottiere.cpp" />
+    <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="Dief.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Koning.cpp" />
+    <ClCompile Include="Koopman.cpp" />
+    <ClCompile Include="Magier.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Moordenaar.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Prediker.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="throw.cpp" />

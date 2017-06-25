@@ -7,21 +7,9 @@
 //
 
 #include "Player.h"
-
 using namespace std;
 
-Player::~Player()
+void Player::AddCard(std::shared_ptr<BuildCard> b)
 {
+	handCards.AddCard(b);
 }
-
-
-Player::Player(std::string name, Socket client) {
-	Name = name;
-	Client = move(client);
-}
-
-Player::Player(std::string name)
-{
-	this->Name = name;
-}
-
