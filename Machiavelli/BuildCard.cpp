@@ -19,4 +19,13 @@ BuildCard::BuildCard(string name, CardColor color, int points)
 	this->coins = points;
 }
 
+string BuildCard::GetCardInfo()
+{
+	auto string = std::to_string(coins) + " : " + ColorToString(color) + " : " + name;
+	if (!description.empty()) {
+		string += " : " + description;
+	}
+	return string;
+}
+
 

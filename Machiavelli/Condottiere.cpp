@@ -4,6 +4,7 @@
 
 Condottiere::Condottiere()
 {
+	Type = CharacterType::Condottiere;
 }
 
 

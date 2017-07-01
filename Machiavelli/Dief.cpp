@@ -4,6 +4,7 @@
 
 Dief::Dief()
 {
+	Type = CharacterType::Dief;
 }
 
 

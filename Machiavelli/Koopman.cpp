@@ -4,6 +4,7 @@
 
 Koopman::Koopman()
 {
+	Type = CharacterType::Koopman;
 }
 
 

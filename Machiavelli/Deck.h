@@ -15,11 +15,16 @@ public:
 	void AddCard(std::shared_ptr<T> card) { deck.push_back(card); }
 	void RemoveCard(std::shared_ptr<T> card) { deck.erase(find(deck.begin(), deck.end(), card)); }
 	void RemoveCardAt(int index) { deck.erase(deck.begin() + index); }
-	int GetDeckSize() { return deck.size(); }
+	size_t GetDeckSize() { return deck.size(); }
 	void ClearDeck() { deck.clear(); }
 	std::shared_ptr<T> Pop() {
 		auto card = deck[0];
 		RemoveCardAt(0);
+		return card;
+	}
+	std::shared_ptr<T> Pop(int i) {
+		auto card = deck[i];
+		RemoveCardAt(i);
 		return card;
 	}
 	std::vector<std::shared_ptr<T>> GetDeck() { return deck; }

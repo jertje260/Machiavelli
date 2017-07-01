@@ -7,6 +7,14 @@ class Player;
 #include "CharacterCard.h"
 #include "CardFactory.h"
 #include "Player.h"
+#include "Bouwmeester.h"
+#include "Condottiere.h"
+#include "Dief.h"
+#include "Koning.h"
+#include "Koopman.h"
+#include "Magier.h"
+#include "Moordenaar.h"
+#include "Prediker.h"
 
 using namespace std;
 class Game
@@ -17,36 +25,57 @@ public:
 
 	bool IsAvailable();
 	bool IsStarted();
-	vector<std::shared_ptr<Player>> GetCurrentPlayers();
-	void AddPlayer(std::shared_ptr<Player> p);
-	std::shared_ptr<Player> GetCurrentPlayer();
-	void HandleCommand(std::shared_ptr<Player> player, string command);
+	vector<shared_ptr<Player>> GetCurrentPlayers();
+	void AddPlayer(shared_ptr<Player> p);
+	shared_ptr<Player> GetCurrentPlayer();
+	void HandleCommand(shared_ptr<Player> player, string command);
 	void Start();
+	void Quit(shared_ptr<Player> p);
+	void Quit();
+	bool Running;
+	bool Active;
 
+	void ExecuteSpecial(shared_ptr<Bouwmeester> spec);
+	void ExecuteSpecial(shared_ptr<Koopman> spec);
+	void ExecuteSpecial(shared_ptr<Magier> spec);
+	void ExecuteSpecial(shared_ptr<Condottiere> spec);
+	void ExecuteSpecial(shared_ptr<Koning> spec);
+	void ExecuteSpecial(shared_ptr<Dief> spec);
+	void ExecuteSpecial(shared_ptr<Moordenaar> spec);
+	void ExecuteSpecial(shared_ptr<Prediker> spec);
 
 private:
-	bool Running;
-	vector<std::shared_ptr<Player>> Players;
+
+	vector<shared_ptr<Player>> Players;
 	void LoadResources();
-	void NewGame();
+	void NewRound();
 	void SetupRound();
-	void PlayRound();
+	void ChooseCharacters();
+	void PlayRounds();
 	int goldPiecesLeft = 30;
+	shared_ptr<Player> notCurrentPlayer;
 
-	void DrawBuildCard(std::shared_ptr<Player> p);
-	bool GiveGold(std::shared_ptr<Player> p, int amount);
-
+	void SwitchPlayer();
+	void DrawBuildCard(shared_ptr<Player> p);
+	bool GiveGold(shared_ptr<Player> p, int amount);
+	void Tell(shared_ptr<Player>p, string what);
+	void TellAll(string what);
+	shared_ptr<Player> King;
 
 	void CreateBuildDeck();
 	void CreateCharacterDeck();
 
-	int currentPlayer = 0;
+	vector<CharacterType> characterOrder{CharacterType::Moordenaar,CharacterType::Dief, CharacterType::Magiër,CharacterType::Koning, CharacterType::Prediker, CharacterType::Koopman, CharacterType::Bouwmeester, CharacterType::Condottiere };
+
+	shared_ptr<Player> currentPlayer;
 
 	vector<vector<string>> ReadCsv(string path);
 	
 
 	Deck<CharacterCard> characters;
+	Deck<CharacterCard> disposedCharacters;
 	Deck<BuildCard> buildCards;
+	Deck<BuildCard> disposedCards;
 
 
 };

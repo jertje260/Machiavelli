@@ -4,6 +4,7 @@
 
 Prediker::Prediker()
 {
+	Type = CharacterType::Prediker;
 }
 
 

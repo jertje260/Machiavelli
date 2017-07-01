@@ -15,7 +15,7 @@ public:
 	void SetDescription(string description) {
 		this->description = description;
 	}
-
+	string GetCardInfo();
 
 private:
 	string name;

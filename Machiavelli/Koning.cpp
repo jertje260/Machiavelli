@@ -4,6 +4,7 @@
 
 Koning::Koning()
 {
+	Type = CharacterType::Koning;
 }
 
 

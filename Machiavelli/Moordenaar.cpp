@@ -4,6 +4,7 @@
 
 Moordenaar::Moordenaar()
 {
+	Type = CharacterType::Moordenaar;
 }
 
 

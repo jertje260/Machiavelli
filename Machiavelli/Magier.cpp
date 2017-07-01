@@ -4,6 +4,7 @@
 
 Magier::Magier()
 {
+	Type = CharacterType::Magiër;
 }
 
 

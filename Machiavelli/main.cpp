@@ -7,12 +7,18 @@
 //  Copyright (c) 2014 Avans Hogeschool, 's-Hertogenbosch. All rights reserved.
 //
 
+// Memory Leaks
+#include <vld.h>
+
+
+
 #include <thread>
 #include <iostream>
 #include <exception>
 #include <memory>
 #include <utility>
 #include <chrono>
+#include <algorithm>
 using namespace std;
 
 #include "Socket.h"
@@ -23,150 +29,172 @@ using namespace std;
 #include "Game.h"
 
 namespace machiavelli {
-    const int tcp_port {1080};
-    const string prompt {"machiavelli> "};
+	const int tcp_port{ 1080 };
+	const string prompt{ "machiavelli> " };
 }
 
 static bool running = true;
 
 static Sync_queue<ClientCommand> queue;
 
-static shared_ptr<Game> game;
+static vector<shared_ptr<Game>> games;
 
 void consume_command() // runs in its own thread
 {
-    try {
-        while (running) {
-            ClientCommand command {queue.get()}; // will block here unless there are still command objects in the queue
-            if (auto clientInfo = command.get_client_info().lock()) {
-                auto client = clientInfo->get_socket();
-                auto player = clientInfo->get_player();
-                try {
+	try {
+		while (running) {
+			ClientCommand command{ queue.get() }; // will block here unless there are still command objects in the queue
+			if (command.get_cmd() == "quit_server") { // quit server command to trigger the stopping of this thread.
+				break;
+			}
+			if (auto clientInfo = command.get_client_info().lock()) {
+				auto client = clientInfo->get_socket();
+				auto player = clientInfo->get_player();
+				auto game = clientInfo->get_game();
+				try {
 					game->HandleCommand(player, command.get_cmd());
-                    // TODO handle command here
-                    //client << player.get_name() << ", you wrote: '" << command.get_cmd() << "', but I'll ignore that for now.\r\n" << machiavelli::prompt;
-                } catch (const exception& ex) {
-                    cerr << "*** exception in consumer thread for player " << player->get_name() << ": " << ex.what() << '\n';
-                    if (client->is_open()) {
-                        client->write("Sorry, something went wrong during handling of your request.\r\n");
-                    }
-                } catch (...) {
-                    cerr << "*** exception in consumer thread for player " << player->get_name() << '\n';
-                    if (client->is_open()) {
-                        client->write("Sorry, something went wrong during handling of your request.\r\n");
-                    }
-                }
-            }
-        }
-    } catch (...) {
-        cerr << "consume_command crashed\n";
-    }
+					
+				}
+				catch (const exception& ex) {
+					cerr << "*** exception in consumer thread for player " << player->GetName() << ": " << ex.what() << '\r\n';
+					if (client->is_open()) {
+						client->write("Sorry, something went wrong during handling of your request.\r\n");
+					}
+				}
+				catch (...) {
+					cerr << "*** exception in consumer thread for player " << player->GetName() << '\n';
+					if (client->is_open()) {
+						client->write("Sorry, something went wrong during handling of your request.\r\n");
+					}
+				}
+			}
+		}
+	}
+	catch (...) {
+		cerr << "consume_command crashed\n";
+	}
 }
 
 std::shared_ptr<ClientInfo> init_client_session(std::shared_ptr<Socket> client) {
-    client->write("Welcome to Server 1.0! To quit, type 'quit'.\r\n");
+	client->write("Welcome to Server 1.0! To quit, type 'quit'.\r\n");
 	return make_shared<ClientInfo>(move(client), make_shared<Player>());
 }
 
 void handle_client(Socket client) // this function runs in a separate thread
 {
-    try {
-		if (game == nullptr) {
-			game = make_shared<Game>();
+	try {
+		shared_ptr<Game> curGame;
+		if (games.size() > 0) {
+			 curGame = games.back();
 		}
-        auto client_info = init_client_session(std::make_shared<Socket>(move(client)));
-        auto socket = client_info->get_socket();
-        auto player = client_info->get_player();
-
-		if (!game->IsAvailable()) {
-			socket->write("There is no game available try again later");
+		if (curGame == nullptr || !curGame->IsAvailable()) {
+			cerr << "No free game available, creating new one.\r\n";
+			curGame = make_shared<Game>();
+			games.push_back(curGame);
 		}
-		else {
 
-			socket->write("What's your name?\r\n");
-			string name;
-			bool done{ false };
-			while (!done) {
-				done = socket->readline([&name](std::string input) {
-					name = input;
-				});
-			}
-			player->set_name(name);
-			game->AddPlayer(player);
-			player->AddClient(socket);
-			*socket << "Welcome, " << player->get_name() << ", have fun playing our game!\r\n" << machiavelli::prompt;
-			if (!game->IsAvailable()) {
-				game->Start();
-			}
-			while (running) { // game loop
-				try {
-					// read first line of request
-					std::string cmd;
-					if (socket->readline([&cmd](std::string input) { cmd = input; })) {
-						cerr << '[' << socket->get_dotted_ip() << " (" << socket->get_socket() << ") " << player->get_name() << "] " << cmd << "\r\n";
+		auto client_info = init_client_session(std::make_shared<Socket>(move(client)));
+		auto socket = client_info->get_socket();
+		auto player = client_info->get_player();
+		client_info->set_game(curGame);
+		player->AddClient(socket);
 
-						if (cmd == "quit") {
-							socket->write("Bye!\r\n");
-							break; // out of game loop, will end this thread and close connection
+		socket->write("What's your name?\r\n");
+		
+		player->set_name(player->GetResponse());
+		curGame->AddPlayer(player);
+
+		socket->write("Welcome, " + player->GetName() + ", have fun playing our game!\r\n");
+		if (!curGame->IsAvailable()) {
+			curGame->Start();
+		}
+		else
+		{
+			socket->write("Waiting for another player to join and start the game.\r\n");
+		}
+		while (curGame->Active) { // game loop
+			try {
+
+				// read first line of request
+				std::string cmd;
+				if (socket->readline([&cmd](std::string input) { cmd = input; })) {
+					cerr << '[' << socket->get_dotted_ip() << " (" << socket->get_socket() << ") " << player->GetName() << "] " << cmd << "\r\n";
+
+					if (cmd == "quit") {
+						curGame->Quit(player);
+
+						socket->write("Bye!\r\n");
+						games.erase(remove(games.begin(), games.end(), curGame), games.end());
+					}
+					else if (cmd == "quit_server") {
+						for each (std::shared_ptr<Game> g in games)
+						{
+							g->Quit();
 						}
-						else if (cmd == "quit_server") {
-							running = false;
-						}
-
+						running = false;
 						ClientCommand command{ cmd, client_info };
 						queue.put(command);
-					};
 
-				}
-				catch (const exception& ex) {
-					*socket << "ERROR: " << ex.what() << "\r\n";
-				}
-				catch (...) {
-					socket->write("ERROR: something went wrong during handling of your request. Sorry!\r\n");
-				}
+					}
+					else if (curGame->Running) {
+						ClientCommand command{ cmd, client_info };
+						queue.put(command);
+					}
+				};
+
+			}
+			catch (const exception& ex) {
+				*socket << "ERROR: " << ex.what() << "\r\n";
+			}
+			catch (...) {
+				socket->write("ERROR: something went wrong during handling of your request. Sorry!\r\n");
 			}
 		}
-        // close weg
-    } 
-    catch(std::exception &ex) {
-        cerr << "handle_client " << ex.what() << "\n";
-    }
-    catch (...) {
-        cerr << "handle_client crashed\n";
-    }
+		// close weg
+	}
+	catch (std::exception &ex) {
+		cerr << "handle_client " << ex.what() << "\r\n";
+	}
+	catch (...) {
+		cerr << "handle_client crashed\r\n";
+	}
 }
 
 int main(int argc, const char * argv[])
 {
-	
 
-    // start command consumer thread
-    vector<thread> all_threads;
-    all_threads.emplace_back(consume_command);
 
-    // create a server socket
-    ServerSocket server {machiavelli::tcp_port};
+	// start command consumer thread
+	vector<thread> all_threads;
+	all_threads.emplace_back(consume_command);
 
-    try {
-        cerr << "server listening" << '\n';
-        while (running) {
-            // wait for connection from client; will create new socket
-            server.accept([&all_threads](Socket client) {
-                std::cerr << "Connection accepted from " << client.get_dotted_ip() << "\n";
-                all_threads.emplace_back(handle_client, move(client));
-            });
-            this_thread::sleep_for(chrono::milliseconds(100));
-        }
-    } catch (const exception& ex) {
-        cerr << ex.what() << ", resuming..." << '\n';
-    } catch (...) {
-        cerr << "problems, problems, but: keep calm and carry on!\n";
-    }
+	// create a server socket
+	ServerSocket server{ machiavelli::tcp_port };
 
-    for (auto &t : all_threads) {
-        t.join();
-    }
+	try {
+		cerr << "server listening\r\n";
+		while (running) {
+			// wait for connection from client; will create new socket
+			server.accept([&all_threads](Socket client) {
+				std::cerr << "Connection accepted from " << client.get_dotted_ip() << "\r\n";
+				all_threads.emplace_back(handle_client, move(client));
+			});
+			this_thread::sleep_for(chrono::milliseconds(100));
+		}
 
-    return 0;
+
+	}
+	catch (const exception& ex) {
+		cerr << ex.what() << ", resuming..." << '\r\n';
+	}
+	catch (...) {
+		cerr << "problems, problems, but: keep calm and carry on!\r\n";
+	}
+
+	for (auto &t : all_threads) {
+		t.join();
+	}
+
+	return 0;
 }
 

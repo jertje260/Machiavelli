@@ -4,6 +4,7 @@
 
 Bouwmeester::Bouwmeester()
 {
+	Type = CharacterType::Bouwmeester;
 }
 
 
