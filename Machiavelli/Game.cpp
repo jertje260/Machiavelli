@@ -8,6 +8,7 @@ using namespace std;
 
 Game::Game() 
 {
+	cerr << "Creating a new game\n";
 	Running = false;
 	LoadResources();
 }
@@ -27,23 +28,24 @@ bool Game::IsStarted()
 	return Running;
 }
 
-std::vector<Player> Game::GetCurrentPlayers()
+std::vector<std::shared_ptr<Player>> Game::GetCurrentPlayers()
 {
 	return Players;
 }
 
-void Game::AddPlayer(Player p)
+void Game::AddPlayer(std::shared_ptr<Player> p)
 {
 	Players.push_back(p);
+	cerr << "Player " << p->get_name() << " joined the game\n";
 }
 
 
-Player Game::GetCurrentPlayer()
+std::shared_ptr<Player> Game::GetCurrentPlayer()
 {
 	return Players[currentPlayer];
 }
 
-void Game::HandleCommand(Player player, std::string command)
+void Game::HandleCommand(std::shared_ptr<Player> player, std::string command)
 {
 
 }
@@ -65,7 +67,12 @@ void Game::Start()
 
 void Game::LoadResources()
 {
+	cerr << "Creating build deck\n";
 	CreateBuildDeck();
+	cerr << "Created build deck " << buildCards.GetDeck().size() << " \n";
+	cerr << "Creating Character deck\n";
+	CreateCharacterDeck();
+	cerr << "Created Character deck " << characters.GetDeck().size() << " \n";
 }
 
 void Game::NewGame()
@@ -83,15 +90,15 @@ void Game::PlayRound()
 
 }
 
-void Game::DrawBuildCard(Player p)
+void Game::DrawBuildCard(std::shared_ptr<Player> p)
 {
-	p.AddCard(buildCards.Pop());
+	p->AddCard(buildCards.Pop());
 }
 
-bool Game::GiveGold(Player p, int amount)
+bool Game::GiveGold(std::shared_ptr<Player> p, int amount)
 {
 	if (goldPiecesLeft >= amount) {
-		p.AddGold(amount);
+		p->AddGold(amount);
 		goldPiecesLeft -= amount;
 
 		return true;

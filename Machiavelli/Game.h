@@ -17,24 +17,24 @@ public:
 
 	bool IsAvailable();
 	bool IsStarted();
-	vector<Player> GetCurrentPlayers();
-	void AddPlayer(Player p);
-	Player GetCurrentPlayer();
-	void HandleCommand(Player player, string command);
+	vector<std::shared_ptr<Player>> GetCurrentPlayers();
+	void AddPlayer(std::shared_ptr<Player> p);
+	std::shared_ptr<Player> GetCurrentPlayer();
+	void HandleCommand(std::shared_ptr<Player> player, string command);
 	void Start();
 
 
 private:
 	bool Running;
-	vector<Player> Players;
+	vector<std::shared_ptr<Player>> Players;
 	void LoadResources();
 	void NewGame();
 	void SetupRound();
 	void PlayRound();
 	int goldPiecesLeft = 30;
 
-	void DrawBuildCard(Player p);
-	bool GiveGold(Player p, int amount);
+	void DrawBuildCard(std::shared_ptr<Player> p);
+	bool GiveGold(std::shared_ptr<Player> p, int amount);
 
 
 	void CreateBuildDeck();

@@ -14,6 +14,7 @@
 #include "BuildCard.h"
 #include "CharacterCard.h"
 #include "Deck.h"
+#include "Socket.h"
 using namespace std;
 
 class Player {
@@ -27,8 +28,11 @@ public:
 	void AddGold(int amount) {
 		gold += amount;
 	}
+	std::shared_ptr<Socket> GetClient() { return client; }
+	void AddClient(std::shared_ptr<Socket> socket) { client = socket; }
 
 private:
+	std::shared_ptr<Socket> client;
 	std::string name;
 	Deck<CharacterCard> caracters;
 	Deck<BuildCard> handCards;
