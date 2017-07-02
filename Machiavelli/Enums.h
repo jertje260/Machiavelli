@@ -2,7 +2,7 @@
 #include <string>
 #include <algorithm>
 
-enum class CardColor { white, yellow, green, blue, red, lila };
+enum class CardColor { yellow, green, blue, red, lila };
 enum class CharacterType { NONE, Moordenaar, Dief, Magiër, Koning, Prediker, Koopman, Bouwmeester, Condottiere };
 
 inline const std::string CharacterToString(CharacterType c) {
@@ -64,8 +64,6 @@ inline const CharacterType StringToCharacter(std::string c) {
 inline const std::string ColorToString(CardColor c) {
 	switch (c)
 	{
-	case CardColor::white:
-		return "White";
 	case CardColor::yellow:
 		return "Yellow";
 	case CardColor::green:
@@ -84,10 +82,7 @@ inline const std::string ColorToString(CardColor c) {
 inline const CardColor StringToColor(std::string c) {
 	std::transform(c.begin(), c.end(), c.begin(), ::tolower);
 	
-	if (c == "wit") {
-		return CardColor::white;
-	}
-	else if (c == "geel") {
+	if (c == "geel") {
 		return CardColor::yellow;
 	}
 	else if (c == "groen") {

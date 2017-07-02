@@ -26,10 +26,17 @@ public:
 	void set_name(const string& new_name) { name = new_name; }
 	void AddCard(shared_ptr<BuildCard> b);
 	void AddGold(int amount) {
+		if (gold + amount < 0) {
+			throw invalid_argument("The player will get negative gold.");
+		}
 		gold += amount;
 	}
 	int GetGold() {
 		return gold;
+	}
+
+	void Build(int number) {
+		playedCards.AddCard(handCards.Pop(number));
 	}
 	string GetResponse();
 	shared_ptr<Socket> GetClient() { return client; }
@@ -38,8 +45,14 @@ public:
 	void AddCharacter(shared_ptr<CharacterCard> character) { characters.AddCard(character); }
 	Deck<CharacterCard> GetCharacters() { return characters; }
 	bool HasCharacter(CharacterType c);
+	Deck<BuildCard> GetHandCards() { return handCards; }
+	void SetHandCards(Deck<BuildCard> cards) { handCards = cards; }
 	bool EndedTurn = false;
-
+	int GetPoints();
+	shared_ptr<CharacterCard> GetCharacter(CharacterType type);
+	int GetPoints(CardColor color);
+	int GetBuildingTypes();
+	Deck<BuildCard> GetBuildings() { return playedCards; }
 	void ShowHandCards();
 	void ShowCharacterCards();
 	void ShowBuiltBuildings();

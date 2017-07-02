@@ -55,11 +55,91 @@ bool Player::HasCharacter(CharacterType c)
 {
 	for each (auto character in characters.GetDeck())
 	{
-		if (character->Type == c && !character->Killed) {
+		if (character->Type == c) {
 			return true;
 		}
 	}
 	return false;
+}
+
+int Player::GetPoints()
+{
+	int p = 0;
+	for each (auto c in playedCards.GetDeck())
+	{
+		p += c->GetCoins();
+	}
+	return p;
+}
+
+shared_ptr<CharacterCard> Player::GetCharacter(CharacterType type)
+{
+	shared_ptr<CharacterCard> c = nullptr;
+	for each (auto character in characters.GetDeck())
+	{
+		if (character->Type == type && !character->Killed) {
+			c = character;
+			break;
+		}
+	}
+	return c;
+}
+
+int Player::GetPoints(CardColor color)
+{
+	int points = 0;
+	for each (auto card in playedCards.GetDeck())
+	{
+		if (card->GetCardColor() == color) {
+			points += card->GetCoins();
+		}
+	}
+	return points;
+}
+
+int Player::GetBuildingTypes()
+{
+	bool yellow = false;
+	bool red = false;
+	bool green = false;
+	bool lila = false;
+	bool blue = false;
+	for each (auto b in playedCards.GetDeck())
+	{
+		switch (b->GetCardColor())
+		{
+		case CardColor::blue:
+			blue = true;
+		case CardColor::green:
+			green = true;
+		case CardColor::yellow:
+			yellow = true;
+		case CardColor::red:
+			red = true;
+		case CardColor::lila:
+			lila = true;
+		default:
+			break;
+		}
+	}
+
+	int value = 0;
+	if (yellow) {
+		value++;
+	}
+	if (red) {
+		value++;
+	}
+	if (green) {
+		value++;
+	}
+	if (lila) {
+		value++;
+	}
+	if (blue) {
+		value++;
+	}
+	return value;
 }
 
 void Player::ShowHandCards()
@@ -97,7 +177,7 @@ void Player::ShowCharacterCards()
 
 void Player::ShowBuiltBuildings()
 {
-	string string = "You have build the following buildings:\r\n";
+	string string = "You have build the following buildings and scored " +  to_string(GetPoints()) + " points.\r\n";
 	string += BuiltBuildings();
 	client->write(string);
 }

@@ -43,18 +43,19 @@ public:
 	void ExecuteSpecial(shared_ptr<Dief> spec);
 	void ExecuteSpecial(shared_ptr<Moordenaar> spec);
 	void ExecuteSpecial(shared_ptr<Prediker> spec);
+	void ExecuteSpecial(shared_ptr<CharacterCard> spec);
 
 private:
 
 	vector<shared_ptr<Player>> Players;
 	void LoadResources();
-	void NewRound();
+	void FinishGame(shared_ptr<Player> p);
 	void SetupRound();
 	void ChooseCharacters();
 	void PlayRounds();
 	int goldPiecesLeft = 30;
 	shared_ptr<Player> notCurrentPlayer;
-
+	string WrongInput(string input) { return "Your input of " + input + "cannot be used, please try again.\r\n"; }
 	void SwitchPlayer();
 	void DrawBuildCard(shared_ptr<Player> p);
 	bool GiveGold(shared_ptr<Player> p, int amount);
@@ -64,7 +65,8 @@ private:
 
 	void CreateBuildDeck();
 	void CreateCharacterDeck();
-
+	void Build(int number);
+	void GetBonusCoins(shared_ptr<CharacterCard> c, shared_ptr<Player> p);
 	vector<CharacterType> characterOrder{CharacterType::Moordenaar,CharacterType::Dief, CharacterType::Magiër,CharacterType::Koning, CharacterType::Prediker, CharacterType::Koopman, CharacterType::Bouwmeester, CharacterType::Condottiere };
 
 	shared_ptr<Player> currentPlayer;
@@ -77,6 +79,6 @@ private:
 	Deck<BuildCard> buildCards;
 	Deck<BuildCard> disposedCards;
 
-
+	bool sortDescending(int i, int j) { return i > j; }
 };
 
