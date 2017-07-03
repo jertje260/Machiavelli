@@ -2,7 +2,7 @@
 
 
 
-Condottiere::Condottiere()
+Condottiere::Condottiere() : CharacterCard()
 {
 	Type = CharacterType::Condottiere;
 }

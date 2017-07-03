@@ -8,6 +8,8 @@
 
 #include "Player.h"
 #include "Enums.h"
+#include <thread>
+#include <chrono>
 using namespace std;
 
 void Player::AddCard(std::shared_ptr<BuildCard> b)
@@ -15,19 +17,6 @@ void Player::AddCard(std::shared_ptr<BuildCard> b)
 	handCards.AddCard(b);
 }
 
-string Player::GetResponse()
-{
-	client->write("Machiavelli> ");
-	string str;
-	bool done{ false };
-	while (!done) {
-		done = client->readline([&str](std::string input) {
-			str = input;
-		});
-	}
-	client->write("\r");
-	return str;
-}
 
 void Player::GiveOverview()
 {
@@ -42,7 +31,7 @@ void Player::GiveOverview()
 	{
 		points += c->GetCoins();
 	}
-	overview += "You have " + std::to_string(playedCards.GetDeckSize()) + " cards played resulting in " + std::to_string(points) + " points:\r\n";
+	overview += "You have " + std::to_string(playedCards.GetDeckSize()) + " cards played resulting in " + std::to_string(points) + " points.\r\n";
 	for each (auto c in playedCards.GetDeck())
 	{
 		overview += c->GetCardInfo() + "\r\n";
@@ -85,13 +74,13 @@ shared_ptr<CharacterCard> Player::GetCharacter(CharacterType type)
 	return c;
 }
 
-int Player::GetPoints(CardColor color)
+int Player::GetCount(CardColor color)
 {
 	int points = 0;
 	for each (auto card in playedCards.GetDeck())
 	{
 		if (card->GetCardColor() == color) {
-			points += card->GetCoins();
+			points++;
 		}
 	}
 	return points;

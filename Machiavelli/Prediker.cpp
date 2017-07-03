@@ -2,7 +2,7 @@
 
 
 
-Prediker::Prediker()
+Prediker::Prediker() : CharacterCard()
 {
 	Type = CharacterType::Prediker;
 }

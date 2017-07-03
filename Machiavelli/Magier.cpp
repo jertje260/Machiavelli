@@ -2,7 +2,7 @@
 
 
 
-Magier::Magier()
+Magier::Magier() : CharacterCard()
 {
 	Type = CharacterType::Magiër;
 }

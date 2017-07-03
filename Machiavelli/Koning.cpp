@@ -2,7 +2,7 @@
 
 
 
-Koning::Koning()
+Koning::Koning() : CharacterCard()
 {
 	Type = CharacterType::Koning;
 }

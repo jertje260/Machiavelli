@@ -2,7 +2,7 @@
 
 
 
-Moordenaar::Moordenaar()
+Moordenaar::Moordenaar() : CharacterCard()
 {
 	Type = CharacterType::Moordenaar;
 }

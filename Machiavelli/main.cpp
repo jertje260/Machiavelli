@@ -98,19 +98,15 @@ void handle_client(Socket client) // this function runs in a separate thread
 		auto player = client_info->get_player();
 		client_info->set_game(curGame);
 		player->AddClient(socket);
-
-		socket->write("What's your name?\r\n");
-		
-		player->set_name(player->GetResponse());
 		curGame->AddPlayer(player);
 
-		socket->write("Welcome, " + player->GetName() + ", have fun playing our game!\r\n");
+		socket->write("Welcome, have fun playing our game!\r\nSet your name with the \'name\' <myname>\r\n");
 		if (!curGame->IsAvailable()) {
 			curGame->Start();
 		}
 		else
 		{
-			socket->write("Waiting for another player to join and start the game.\r\n");
+			socket->write("Waiting for another player to join and start the game. Type \'cmds\' for the command info.\r\nMachiavelli> ");
 		}
 		while (curGame->Active) { // game loop
 			try {
@@ -136,7 +132,7 @@ void handle_client(Socket client) // this function runs in a separate thread
 						queue.put(command);
 
 					}
-					else if (curGame->Running) {
+					else if (curGame->Active) {
 						ClientCommand command{ cmd, client_info };
 						queue.put(command);
 					}

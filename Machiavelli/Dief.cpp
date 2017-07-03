@@ -2,7 +2,7 @@
 
 
 
-Dief::Dief()
+Dief::Dief(): CharacterCard()
 {
 	Type = CharacterType::Dief;
 }

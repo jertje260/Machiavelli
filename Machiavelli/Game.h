@@ -17,6 +17,8 @@ class Player;
 #include "Prediker.h"
 
 using namespace std;
+
+enum class GameState { Character, StartPhase, ChooseCard, BuildPhase, SpecialPhase };
 class Game
 {
 public:
@@ -35,33 +37,37 @@ public:
 	bool Running;
 	bool Active;
 
-	void ExecuteSpecial(shared_ptr<Bouwmeester> spec);
-	void ExecuteSpecial(shared_ptr<Koopman> spec);
-	void ExecuteSpecial(shared_ptr<Magier> spec);
-	void ExecuteSpecial(shared_ptr<Condottiere> spec);
-	void ExecuteSpecial(shared_ptr<Koning> spec);
-	void ExecuteSpecial(shared_ptr<Dief> spec);
-	void ExecuteSpecial(shared_ptr<Moordenaar> spec);
-	void ExecuteSpecial(shared_ptr<Prediker> spec);
-	void ExecuteSpecial(shared_ptr<CharacterCard> spec);
+
 
 private:
-
+	void StateCommand(string command);
+	void HandleCharacterChoice(int number);
 	vector<shared_ptr<Player>> Players;
 	void LoadResources();
 	void FinishGame(shared_ptr<Player> p);
 	void SetupRound();
 	void ChooseCharacters();
-	void PlayRounds();
+	void PlayRound();
 	int goldPiecesLeft = 30;
 	shared_ptr<Player> notCurrentPlayer;
-	string WrongInput(string input) { return "Your input of " + input + "cannot be used, please try again.\r\n"; }
+	string WrongInput(string input) { return "Your input of \'" + input + "\' cannot be used, please try again.\r\n"; }
 	void SwitchPlayer();
 	void DrawBuildCard(shared_ptr<Player> p);
 	bool GiveGold(shared_ptr<Player> p, int amount);
 	void Tell(shared_ptr<Player>p, string what);
 	void TellAll(string what);
 	shared_ptr<Player> King;
+	GameState State;
+	// Phases
+	void StartPhase();
+	void HandleStartPhase(int number);
+	void HandleCardChoice(int number);
+	void BuildPhase();
+	void HandleBuildPhase(int number);
+	void SpecPhase();
+	void HandleSpecPhase(string input);
+	void TurnEnd();
+
 
 	void CreateBuildDeck();
 	void CreateCharacterDeck();
@@ -78,7 +84,26 @@ private:
 	Deck<CharacterCard> disposedCharacters;
 	Deck<BuildCard> buildCards;
 	Deck<BuildCard> disposedCards;
+	shared_ptr<Player> firstWinner;
+	shared_ptr<CharacterCard> currentChar;
+	size_t characterNumber = -1;
 
-	bool sortDescending(int i, int j) { return i > j; }
+	// Specs
+	void BuilderSpec();
+	void MerchantSpec();
+	void MageSpec();
+	void CondottiereSpec();
+	void KingSpec();
+	void ThiefSpec();
+	void MurdererSpec();
+	void PreacherSpec();
+
+	void BuilderHandle(string input);
+	void MerchantHandle(string input);
+	void MageHandle(string input);
+	void CondottiereHandle(string input);
+	void KingHandle(string input);
+	void ThiefHandle(string input);
+	void MurdererHandle(string input);
+	void PreacherHandle(string input);
 };
-

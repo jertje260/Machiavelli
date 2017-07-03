@@ -416,7 +416,7 @@ void Game::MurdererHandle(string input)
 {
 	try {
 		int num = stoi(input);
-		if (num > 0 && num < characterOrder.size()) {
+		if (num >= 0 && num < characterOrder.size()) {
 			for each (auto c in notCurrentPlayer->GetCharacters().GetDeck())
 			{
 				if (c->Type == characterOrder[num]) {
@@ -690,7 +690,7 @@ void Game::PlayRound()
 					auto gold = currentPlayer->GetGold();
 					currentPlayer->AddGold(-gold);
 					notCurrentPlayer->AddGold(gold);
-					Tell(currentPlayer, "You have been stolen by " + notCurrentPlayer->GetName() + " for " + to_string(gold) + " coins.\r\n");
+					Tell(currentPlayer, "You have been stolen by " + notCurrentPlayer->GetName() + " for " + to_string(gold) + "coins.\r\n");
 					Tell(notCurrentPlayer, "You have stolen " + to_string(gold) + " coins from " + currentPlayer->GetName() + ".\r\n");
 				}
 			}

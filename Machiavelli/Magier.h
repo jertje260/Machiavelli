@@ -6,4 +6,5 @@ class Magier :
 public:
 	Magier();
 	virtual ~Magier();
+	int phaseNumber = 0;
 };

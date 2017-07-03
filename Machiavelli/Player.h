@@ -23,7 +23,7 @@ public:
 	Player(const string& name) : name{ name } {}
 
 	string GetName() const { return name; }
-	void set_name(const string& new_name) { name = new_name; }
+	void SetName(const string& new_name) { name = new_name; }
 	void AddCard(shared_ptr<BuildCard> b);
 	void AddGold(int amount) {
 		if (gold + amount < 0) {
@@ -38,7 +38,6 @@ public:
 	void Build(int number) {
 		playedCards.AddCard(handCards.Pop(number));
 	}
-	string GetResponse();
 	shared_ptr<Socket> GetClient() { return client; }
 	void AddClient(shared_ptr<Socket> socket) { client = socket; }
 	void GiveOverview();
@@ -50,13 +49,17 @@ public:
 	bool EndedTurn = false;
 	int GetPoints();
 	shared_ptr<CharacterCard> GetCharacter(CharacterType type);
-	int GetPoints(CardColor color);
+	int GetCount(CardColor color);
 	int GetBuildingTypes();
 	Deck<BuildCard> GetBuildings() { return playedCards; }
 	void ShowHandCards();
 	void ShowCharacterCards();
 	void ShowBuiltBuildings();
 	string BuiltBuildings();
+	shared_ptr<CharacterCard> PopCharacter() { return characters.Pop(); }
+	shared_ptr<BuildCard> PopBuilding(int number) { return playedCards.Pop(number); }
+
+
 
 private:
 	shared_ptr<Socket> client;

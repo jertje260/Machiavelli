@@ -2,7 +2,7 @@
 
 
 
-Koopman::Koopman()
+Koopman::Koopman() : CharacterCard()
 {
 	Type = CharacterType::Koopman;
 }
