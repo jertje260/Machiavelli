@@ -68,6 +68,7 @@ void consume_command() // runs in its own thread
 					}
 				}
 			}
+
 		}
 	}
 	catch (...) {
@@ -145,6 +146,8 @@ void handle_client(Socket client) // this function runs in a separate thread
 			catch (...) {
 				socket->write("ERROR: something went wrong during handling of your request. Sorry!\r\n");
 			}
+			// stop eating my cpu!
+			this_thread::sleep_for(chrono::milliseconds(10));
 		}
 		// close weg
 	}
