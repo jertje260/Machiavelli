@@ -109,7 +109,7 @@ void handle_client(Socket client) // this function runs in a separate thread
 		{
 			socket->write("Waiting for another player to join and start the game. Type \'cmds\' for the command info.\r\nMachiavelli> ");
 		}
-		while (curGame->Active) { // game loop
+		while (curGame->Active) { // game command loop
 			try {
 
 				// read first line of request
@@ -147,7 +147,7 @@ void handle_client(Socket client) // this function runs in a separate thread
 				socket->write("ERROR: something went wrong during handling of your request. Sorry!\r\n");
 			}
 			// stop eating my cpu!
-			this_thread::sleep_for(chrono::milliseconds(10));
+			this_thread::sleep_for(chrono::milliseconds(1));
 		}
 		// close weg
 	}

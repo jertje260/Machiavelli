@@ -353,7 +353,7 @@ void Game::CondottiereHandle( string input)
 					currentPlayer->AddGold(-(building->GetCoins() - 1));
 					goldPiecesLeft += (building->GetCoins() - 1);
 
-					notCurrentPlayer->GetBuildings().RemoveCard(building);
+					notCurrentPlayer->PopBuilding(building);
 					disposedCards.AddCard(building);
 					Tell(currentPlayer, "You destroyed " + building->GetName() + ".\r\n");
 					Tell(notCurrentPlayer, "Your " + building->GetName() + " was destroyed.\r\n");
