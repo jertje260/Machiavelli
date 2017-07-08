@@ -160,6 +160,7 @@
     <ClInclude Include="Dief.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameCreator.h" />
     <ClInclude Include="Koning.h" />
     <ClInclude Include="Koopman.h" />
     <ClInclude Include="Magier.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Dief.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameCreator.cpp" />
     <ClCompile Include="Koning.cpp" />
     <ClCompile Include="Koopman.cpp" />
     <ClCompile Include="Magier.cpp" />

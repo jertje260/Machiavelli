@@ -87,6 +87,9 @@
     <ClInclude Include="Condottiere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameCreator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -141,6 +144,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Condottiere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCreator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

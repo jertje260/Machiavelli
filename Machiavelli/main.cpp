@@ -27,6 +27,7 @@ using namespace std;
 #include "Player.h"
 #include "ClientInfo.h"
 #include "Game.h"
+#include "GameCreator.h"
 
 namespace machiavelli {
 	const int tcp_port{ 1080 };
@@ -90,7 +91,7 @@ void handle_client(Socket client) // this function runs in a separate thread
 		}
 		if (curGame == nullptr || !curGame->IsAvailable()) {
 			cerr << "No free game available, creating new one.\r\n";
-			curGame = make_shared<Game>();
+			curGame = GameCreator::Get()->CreateGame();
 			games.push_back(curGame);
 		}
 
@@ -121,7 +122,9 @@ void handle_client(Socket client) // this function runs in a separate thread
 						curGame->Quit(player);
 
 						socket->write("Bye!\r\n");
-						games.erase(remove(games.begin(), games.end(), curGame), games.end());
+						if (find(games.begin(), games.end(), curGame) != games.end()) {
+							games.erase(remove(games.begin(), games.end(), curGame), games.end());
+						}
 					}
 					else if (cmd == "quit_server") {
 						for each (std::shared_ptr<Game> g in games)
@@ -131,6 +134,7 @@ void handle_client(Socket client) // this function runs in a separate thread
 						running = false;
 						ClientCommand command{ cmd, client_info };
 						queue.put(command);
+						games.clear();
 
 					}
 					else if (curGame->Active) {
@@ -150,6 +154,7 @@ void handle_client(Socket client) // this function runs in a separate thread
 			this_thread::sleep_for(chrono::milliseconds(1));
 		}
 		// close weg
+		
 	}
 	catch (std::exception &ex) {
 		cerr << "handle_client " << ex.what() << "\r\n";
@@ -157,6 +162,7 @@ void handle_client(Socket client) // this function runs in a separate thread
 	catch (...) {
 		cerr << "handle_client crashed\r\n";
 	}
+	
 }
 
 int main(int argc, const char * argv[])

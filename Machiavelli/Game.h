@@ -37,26 +37,33 @@ public:
 	bool Running;
 	bool Active;
 
+	void SetCharacters(Deck<CharacterCard> d) { characters = d; }
+	void SetBuildCards(Deck<BuildCard> d) { buildCards = d; }
 
 
 private:
 	void StateCommand(string command);
 	void HandleCharacterChoice(int number);
 	vector<shared_ptr<Player>> Players;
-	void LoadResources();
+	shared_ptr<Player> notCurrentPlayer;
+	shared_ptr<Player> King;
+
 	void FinishGame(shared_ptr<Player> p);
 	void SetupRound();
 	void ChooseCharacters();
 	void PlayRound();
 	int goldPiecesLeft = 30;
-	shared_ptr<Player> notCurrentPlayer;
+	
 	string WrongInput(string input) { return "Your input of \'" + input + "\' cannot be used, please try again.\r\n"; }
 	void SwitchPlayer();
 	void DrawBuildCard(shared_ptr<Player> p);
 	bool GiveGold(shared_ptr<Player> p, int amount);
 	void Tell(shared_ptr<Player>p, string what);
 	void TellAll(string what);
-	shared_ptr<Player> King;
+	
+
+
+
 	GameState State;
 	// Phases
 	void StartPhase();
@@ -69,15 +76,14 @@ private:
 	void TurnEnd();
 
 
-	void CreateBuildDeck();
-	void CreateCharacterDeck();
+
 	void Build(int number);
 	void GetBonusCoins(shared_ptr<CharacterCard> c, shared_ptr<Player> p);
 	vector<CharacterType> characterOrder{CharacterType::Moordenaar,CharacterType::Dief, CharacterType::Magiër,CharacterType::Koning, CharacterType::Prediker, CharacterType::Koopman, CharacterType::Bouwmeester, CharacterType::Condottiere };
 
 	shared_ptr<Player> currentPlayer;
 
-	vector<vector<string>> ReadCsv(string path);
+
 	
 
 	Deck<CharacterCard> characters;

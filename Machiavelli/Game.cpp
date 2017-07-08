@@ -1,8 +1,5 @@
 #pragma once
 #include "Game.h"
-#include <fstream>
-#include <iostream>
-#include <sstream>
 #include <algorithm>
 using namespace std;
 
@@ -12,7 +9,7 @@ Game::Game()
 	cerr << "Creating a new game\n";
 	Running = false;
 	Active = true;
-	LoadResources();
+	//LoadResources();
 }
 
 
@@ -353,7 +350,7 @@ void Game::CondottiereHandle( string input)
 					currentPlayer->AddGold(-(building->GetCoins() - 1));
 					goldPiecesLeft += (building->GetCoins() - 1);
 
-					notCurrentPlayer->PopBuilding(building);
+					notCurrentPlayer->PopBuilding(num);
 					disposedCards.AddCard(building);
 					Tell(currentPlayer, "You destroyed " + building->GetName() + ".\r\n");
 					Tell(notCurrentPlayer, "Your " + building->GetName() + " was destroyed.\r\n");
@@ -393,7 +390,7 @@ void Game::ThiefHandle(string input)
 			{
 				if (c->Type == characterOrder[num]) {
 					c->Stolen = true;
-					Tell(currentPlayer, "You have stolen from the " + CharacterToString(characterOrder[num]) + ".\r\n");
+					Tell(currentPlayer, "You have stolen from the " + CharacterToString(characterOrder[num]) + ".\r\nMachiavelli> ");
 					Tell(notCurrentPlayer, "The " + CharacterToString(characterOrder[num]) + " has been stolen.\r\n");
 					break;
 				}
@@ -527,15 +524,7 @@ void Game::HandleCharacterChoice(int number)
 	ChooseCharacters();
 }
 
-void Game::LoadResources()
-{
-	cerr << "Creating build deck\r\n";
-	CreateBuildDeck();
-	cerr << "Created build deck " << buildCards.GetDeck().size() << " \r\n";
-	cerr << "Creating Character deck\r\n";
-	CreateCharacterDeck();
-	cerr << "Created Character deck " << characters.GetDeck().size() << " \r\n";
-}
+
 
 void Game::FinishGame(shared_ptr<Player> p)
 {
@@ -698,6 +687,7 @@ void Game::PlayRound()
 			if (currentChar->Type == CharacterType::Bouwmeester) {
 				DrawBuildCard(currentPlayer);
 				DrawBuildCard(currentPlayer);
+				Tell(currentPlayer, "You drew two cards.\r\n");
 			}
 			StartPhase();
 			// next split
@@ -997,33 +987,9 @@ void Game::TurnEnd()
 	PlayRound();
 }
 
-void Game::CreateBuildDeck() {
-	auto info = ReadCsv("Bouwkaarten.csv");
-	auto factory = CardFactory::Get();
 
-	for (vector<vector<string>>::size_type i = 0; i != info.size(); i++) {
-		auto card = factory->CreateBuildCard(info[i][0], info[i][1], info[i][2]);
-		if (info[i].size() > 3) {
-			auto c = card.get();
-			c->SetDescription(info[i][3]);
-		}
-		buildCards.AddCard(card);
 
-	}
-	buildCards.Shuffle();
-}
 
-void Game::CreateCharacterDeck() {
-	auto info = ReadCsv("karakterkaarten.csv");
-
-	auto factory = CardFactory::Get();
-
-	for (vector<vector<string>>::size_type i = 0; i != info.size(); i++) {
-		auto card = factory->CreateCharacterCard(info[i][1]);
-		characters.AddCard(card);
-	}
-	characters.Shuffle();
-}
 
 void Game::Build(int number)
 {
@@ -1067,29 +1033,5 @@ void Game::GetBonusCoins(shared_ptr<CharacterCard> c, shared_ptr<Player> p)
 
 }
 
-vector<vector<string>> Game::ReadCsv(string path) {
-	ifstream infile(path);
-	vector<vector<string>> returnValue;
-	while (infile)
-	{
-		string line;
-		vector<string> values;
-		if (!getline(infile, line)) break;
 
-		stringstream iss(line);
-
-		while (iss)
-		{
-			string value;
-			if (!getline(iss, value, ';')) break;
-
-			values.push_back(value);
-
-		}
-		returnValue.push_back(values);
-
-	}
-
-	return returnValue;
-}
 
